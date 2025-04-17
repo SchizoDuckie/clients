@@ -6,8 +6,13 @@ import { ConfigService } from "@bitwarden/common/platform/abstractions/config/co
 import { UserKeyDefinition, VAULT_NUDGES_DISK } from "@bitwarden/common/platform/state";
 import { UserId } from "@bitwarden/common/types/guid";
 
-import { HasItemsNudgeService, EmptyVaultNudgeService } from "./custom-nudges-services";
+import { EmptyVaultNudgeService, HasItemsNudgeService } from "./custom-nudges-services";
 import { DefaultSingleNudgeService, SingleNudgeService } from "./default-single-nudge.service";
+
+export type NudgeStatus = {
+  showBadge: boolean;
+  showSpotlight: boolean;
+};
 
 /**
  * Enum to list the various nudge types, to be used by components/badges to show/hide the nudge
@@ -17,19 +22,16 @@ export enum VaultNudgeType {
    * Add future nudges here
    */
   EmptyVaultNudge = "empty-vault-nudge",
-  EmptyVaultBadge = "empty-vault-badge",
   HasVaultItems = "has-vault-items",
   IntroCarouselDismissal = "intro-carousel-dismissal",
 }
 
-export const VAULT_NUDGE_DISMISSED_DISK_KEY = new UserKeyDefinition<VaultNudgeType[]>(
-  VAULT_NUDGES_DISK,
-  "vaultNudgeDismissed",
-  {
-    deserializer: (nudgeDismissed) => nudgeDismissed,
-    clearOn: [], // Do not clear dismissals
-  },
-);
+export const VAULT_NUDGE_DISMISSED_DISK_KEY = new UserKeyDefinition<
+  Partial<Record<VaultNudgeType, NudgeStatus>>
+>(VAULT_NUDGES_DISK, "vaultNudgeDismissed", {
+  deserializer: (value) => value,
+  clearOn: [], // Do not clear dismissals
+});
 
 @Injectable({
   providedIn: "root",
@@ -83,7 +85,11 @@ export class VaultNudgesService {
       FeatureFlag.PM8851_BrowserOnboardingNudge,
     );
     if (hasVaultNudgeFlag) {
-      await this.getNudgeService(nudge).setNudgeStatus(nudge, true, userId);
+      await this.getNudgeService(nudge).setNudgeStatus(
+        nudge,
+        { showBadge: false, showSpotlight: false },
+        userId,
+      );
     }
   }
 }
