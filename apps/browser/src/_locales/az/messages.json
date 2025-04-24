@@ -1098,6 +1098,31 @@
     "message": "Giriş məlumatları güncəlləndi",
     "description": "Message displayed when login details are successfully updated."
   },
+  "loginUpdateTaskSuccess": {
+    "message": "Əhsən sizə! Özünüzü və $ORGANIZATION$ təşkilatını daha güvənli etmək üçün addımlar atdınız.",
+    "placeholders": {
+      "organization": {
+        "content": "$1"
+      }
+    },
+    "description": "Shown to user after login is updated."
+  },
+  "loginUpdateTaskSuccessAdditional": {
+    "message": "$ORGANIZATION$ təşkilatını daha güvənli hala gətirdiyiniz üçün təşəkkürlər. Daha $TASK_COUNT$ parolunuz güncəllənməlidir.",
+    "placeholders": {
+      "organization": {
+        "content": "$1"
+      },
+      "task_count": {
+        "content": "$2"
+      }
+    },
+    "description": "Shown to user after login is updated."
+  },
+  "nextSecurityTaskAction": {
+    "message": "Növbəti parolu dəyişdir",
+    "description": "Message prompting user to undertake completion of another security task."
+  },
   "saveFailure": {
     "message": "Saxlama xətası",
     "description": "Error message shown when the system fails to save login details."
@@ -4903,8 +4928,8 @@
     "message": "Parol yenidən yaradıldı",
     "description": "Notification message for when a password has been regenerated"
   },
-  "saveLoginToBitwarden": {
-    "message": "Giriş Bitwarden-də saxlanılsın?",
+  "saveToBitwarden": {
+    "message": "\"Bitwarden\"də saxla",
     "description": "Confirmation message for saving a login to Bitwarden"
   },
   "spaceCharacterDescriptor": {

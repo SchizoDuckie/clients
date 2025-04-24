@@ -1098,6 +1098,31 @@
     "message": "Zugangsdaten aktualisiert",
     "description": "Message displayed when login details are successfully updated."
   },
+  "loginUpdateTaskSuccess": {
+    "message": "Gut gemacht! Du hast die Schritte unternommen, um dich und $ORGANIZATION$ sicherer zu machen.",
+    "placeholders": {
+      "organization": {
+        "content": "$1"
+      }
+    },
+    "description": "Shown to user after login is updated."
+  },
+  "loginUpdateTaskSuccessAdditional": {
+    "message": "Vielen Dank, dass du $ORGANIZATION$ sicherer gemacht hast. Du hast $TASK_COUNT$ weitere Passwörter zum Aktualisieren.",
+    "placeholders": {
+      "organization": {
+        "content": "$1"
+      },
+      "task_count": {
+        "content": "$2"
+      }
+    },
+    "description": "Shown to user after login is updated."
+  },
+  "nextSecurityTaskAction": {
+    "message": "Nächstes Passwort ändern",
+    "description": "Message prompting user to undertake completion of another security task."
+  },
   "saveFailure": {
     "message": "Fehler beim Speichern",
     "description": "Error message shown when the system fails to save login details."
@@ -4903,8 +4928,8 @@
     "message": "Passwort neu generiert",
     "description": "Notification message for when a password has been regenerated"
   },
-  "saveLoginToBitwarden": {
-    "message": "Zugangsdaten in Bitwarden speichern?",
+  "saveToBitwarden": {
+    "message": "Save to Bitwarden",
     "description": "Confirmation message for saving a login to Bitwarden"
   },
   "spaceCharacterDescriptor": {
