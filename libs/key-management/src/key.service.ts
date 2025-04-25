@@ -1042,7 +1042,7 @@ export class DefaultKeyService implements KeyServiceAbstraction {
               let decrypted: OrgKey;
 
               if (BaseEncryptedOrganizationKey.isProviderEncrypted(encrypted)) {
-                decrypted = await encrypted.decrypt(this.encryptService, providerKeys);
+                decrypted = await encrypted.decrypt(this.encryptService, providerKeys!);
               } else {
                 decrypted = await encrypted.decrypt(this.encryptService, userPrivateKey);
               }
