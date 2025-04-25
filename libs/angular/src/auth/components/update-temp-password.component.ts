@@ -196,6 +196,7 @@ export class UpdateTempPasswordComponent extends BaseChangePasswordComponent imp
       this.logService.error(e);
     }
   }
+
   private async updateTempPassword(masterPasswordHash: string, userKey: [UserKey, EncString]) {
     const request = new UpdateTempPasswordRequest();
     request.key = userKey[1].encryptedString;

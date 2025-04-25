@@ -32,6 +32,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   minimumLength = Utils.minimumPasswordLength;
 
   protected email: string;
+  protected userId: string;
   protected kdfConfig: KdfConfig;
 
   protected destroy$ = new Subject<void>();
@@ -53,6 +54,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     this.email = await firstValueFrom(
       this.accountService.activeAccount$.pipe(map((a) => a?.email)),
     );
+    this.userId = await firstValueFrom(this.accountService.activeAccount$.pipe(map((a) => a?.id)));
     this.accountService.activeAccount$
       .pipe(
         getUserId,

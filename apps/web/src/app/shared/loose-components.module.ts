@@ -1,6 +1,8 @@
 import { NgModule } from "@angular/core";
 
 import {
+  ChangePasswordComponent,
+  InputPasswordComponent,
   PasswordCalloutComponent,
   UserVerificationFormInputComponent,
   VaultTimeoutInputComponent,
@@ -92,6 +94,8 @@ import { SharedModule } from "./shared.module";
     UserLayoutComponent,
     VerifyRecoverDeleteOrgComponent,
     VaultTimeoutInputComponent,
+    ChangePasswordComponent,
+    InputPasswordComponent,
   ],
   declarations: [
     AcceptFamilySponsorshipComponent,
