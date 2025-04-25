@@ -3,6 +3,7 @@ import {
   NEVER,
   Observable,
   combineLatest,
+  filter,
   firstValueFrom,
   forkJoin,
   map,
@@ -1022,7 +1023,9 @@ export class DefaultKeyService implements KeyServiceAbstraction {
 
         return combineLatest([
           this.stateProvider.getUser(userId, USER_ENCRYPTED_ORGANIZATION_KEYS).state$,
-          this.providerKeysHelper$(userId, userPrivateKey),
+          this.providerKeysHelper$(userId, userPrivateKey).pipe(
+            filter((providerKeys) => providerKeys != null),
+          ),
         ]).pipe(
           switchMap(async ([encryptedOrgKeys, providerKeys]) => {
             const result: Record<OrganizationId, OrgKey> = {};
@@ -1039,9 +1042,6 @@ export class DefaultKeyService implements KeyServiceAbstraction {
               let decrypted: OrgKey;
 
               if (BaseEncryptedOrganizationKey.isProviderEncrypted(encrypted)) {
-                if (providerKeys == null) {
-                  throw new Error("No provider keys found.");
-                }
                 decrypted = await encrypted.decrypt(this.encryptService, providerKeys);
               } else {
                 decrypted = await encrypted.decrypt(this.encryptService, userPrivateKey);
