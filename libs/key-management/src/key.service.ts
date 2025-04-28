@@ -3,7 +3,6 @@ import {
   NEVER,
   Observable,
   combineLatest,
-  filter,
   firstValueFrom,
   forkJoin,
   map,
@@ -1021,13 +1020,8 @@ export class DefaultKeyService implements KeyServiceAbstraction {
           return of({ userKey: userKeys.userKey, orgKeys: null });
         }
 
-        return combineLatest([
-          this.stateProvider.getUser(userId, USER_ENCRYPTED_ORGANIZATION_KEYS).state$,
-          this.providerKeysHelper$(userId, userPrivateKey).pipe(
-            filter((providerKeys) => providerKeys != null),
-          ),
-        ]).pipe(
-          switchMap(async ([encryptedOrgKeys, providerKeys]) => {
+        return this.stateProvider.getUser(userId, USER_ENCRYPTED_ORGANIZATION_KEYS).state$.pipe(
+          switchMap(async (encryptedOrgKeys) => {
             const result: Record<OrganizationId, OrgKey> = {};
             encryptedOrgKeys = encryptedOrgKeys ?? {};
             for (const orgId of Object.keys(encryptedOrgKeys) as OrganizationId[]) {
@@ -1042,7 +1036,8 @@ export class DefaultKeyService implements KeyServiceAbstraction {
               let decrypted: OrgKey;
 
               if (BaseEncryptedOrganizationKey.isProviderEncrypted(encrypted)) {
-                decrypted = await encrypted.decrypt(this.encryptService, providerKeys!);
+                // Providers are not able to directly access cipher data by access control.
+                continue;
               } else {
                 decrypted = await encrypted.decrypt(this.encryptService, userPrivateKey);
               }

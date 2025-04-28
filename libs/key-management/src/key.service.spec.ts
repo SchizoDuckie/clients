@@ -616,44 +616,10 @@ describe("keyService", () => {
       expect(orgKey.keyB64).toContain("org1Key");
     });
 
-    it("returns decryption keys when some of the org keys are providers", async () => {
-      const org2Id = "org2Id" as OrganizationId;
-      updateKeys({
-        userKey: makeSymmetricCryptoKey<UserKey>(64),
-        encryptedPrivateKey: makeEncString("privateKey"),
-        orgKeys: {
-          [org1Id]: { type: "organization", key: makeEncString("org1Key").encryptedString! },
-          [org2Id]: {
-            type: "provider",
-            key: makeEncString("provider1Key").encryptedString!,
-            providerId: "provider1",
-          },
-        },
-        providerKeys: {
-          provider1: makeEncString("provider1Key").encryptedString!,
-        },
-      });
-
-      const decryptionKeys = await firstValueFrom(keyService.cipherDecryptionKeys$(mockUserId));
-
-      expect(decryptionKeys).not.toBeNull();
-      expect(decryptionKeys!.userKey).not.toBeNull();
-      expect(decryptionKeys!.orgKeys).not.toBeNull();
-      expect(Object.keys(decryptionKeys!.orgKeys!)).toHaveLength(2);
-
-      const orgKey = decryptionKeys!.orgKeys![org1Id];
-      expect(orgKey).not.toBeNull();
-      expect(orgKey.keyB64).toContain("org1Key");
-
-      const org2Key = decryptionKeys!.orgKeys![org2Id];
-      expect(org2Key).not.toBeNull();
-      expect(org2Key.keyB64).toContain("provider1Key");
-    });
-
     it("returns a stream that pays attention to updates of all data", async () => {
-      // Start listening until there have been 6 emissions
+      // Start listening until there have been 5 emissions
       const promise = lastValueFrom(
-        keyService.cipherDecryptionKeys$(mockUserId).pipe(bufferCount(6), take(1)),
+        keyService.cipherDecryptionKeys$(mockUserId).pipe(bufferCount(5), take(1)),
       );
 
       // User has their UserKey set
@@ -669,14 +635,6 @@ describe("keyService", () => {
       const initialPrivateKey = makeEncString("userPrivateKey");
       updateKeys({
         encryptedPrivateKey: initialPrivateKey,
-      });
-
-      // Because switchMap is a little to good at its job
-      await awaitAsync();
-
-      // Current architecture requires that provider keys are set before org keys
-      updateKeys({
-        providerKeys: {},
       });
 
       // Because switchMap is a little to good at its job
@@ -712,14 +670,8 @@ describe("keyService", () => {
         orgKeys: {},
       });
 
-      // Will emit again when providers alone are set, but this won't change the output until orgs are set
-      expect(emittedValues[3]).toEqual({
-        userKey: initialUserKey,
-        orgKeys: {},
-      });
-
       // Expect org keys to get emitted
-      expect(emittedValues[4]).toEqual({
+      expect(emittedValues[3]).toEqual({
         userKey: initialUserKey,
         orgKeys: {
           [org1Id]: expect.anything(),
@@ -727,7 +679,7 @@ describe("keyService", () => {
       });
 
       // Expect out of band user key update
-      expect(emittedValues[5]).toEqual({
+      expect(emittedValues[4]).toEqual({
         userKey: updatedUserKey,
         orgKeys: {
           [org1Id]: expect.anything(),
