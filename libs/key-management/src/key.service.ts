@@ -1029,20 +1029,15 @@ export class DefaultKeyService implements KeyServiceAbstraction {
                 continue;
               }
               const encrypted = BaseEncryptedOrganizationKey.fromData(encryptedOrgKeys[orgId]);
-              if (encrypted == null) {
+              // Providers are not able to directly access cipher data by access control.
+              if (
+                encrypted == null ||
+                BaseEncryptedOrganizationKey.isProviderEncrypted(encrypted)
+              ) {
                 continue;
               }
 
-              let decrypted: OrgKey;
-
-              if (BaseEncryptedOrganizationKey.isProviderEncrypted(encrypted)) {
-                // Providers are not able to directly access cipher data by access control.
-                continue;
-              } else {
-                decrypted = await encrypted.decrypt(this.encryptService, userPrivateKey);
-              }
-
-              result[orgId] = decrypted;
+              result[orgId] = await encrypted.decrypt(this.encryptService, userPrivateKey);
             }
 
             return result;
